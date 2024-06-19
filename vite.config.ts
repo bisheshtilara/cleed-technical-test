@@ -1,3 +1,5 @@
+/// <reference types="vitest" />
+
 import vue from "@vitejs/plugin-vue"
 import autoprefixer from "autoprefixer"
 import path from "path"
@@ -9,6 +11,10 @@ export default defineConfig({
     postcss: {
       plugins: [tailwind(), autoprefixer()],
     },
+  },
+  test: {
+    globals: true,
+    environment: "happy-dom",
   },
   plugins: [vue()],
   resolve: {
