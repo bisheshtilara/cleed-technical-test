@@ -59,49 +59,38 @@ const editTodo = (todo: ITodo) => {
 </script>
 
 <template>
-  <div class="max-w-xl mx-auto space-y-8">
-    <div class="space-y-4">
-      <div class="flex items-center justify-between">
-        <CardTitle>Todo List</CardTitle>
-        <Button @click="router.push('/add')" class="space-x-2" size="sm">
-          <p>Add Todo</p>
-          <BadgePlus :size="20" />
-        </Button>
-      </div>
-      <div class="flex items-center justify-between flex-row-reverse">
-        <Button
-          @click="clearTodos"
-          size="sm"
-          class="space-x-2"
-          variant="destructive"
+  <div class="max-w-xl mx-auto space-y-4">
+    <div class="flex items-center justify-between">
+      <CardTitle>Todo List</CardTitle>
+    </div>
+    <div class="flex items-center justify-between flex-row-reverse">
+      <Button @click="router.push('/add')" class="space-x-2" size="sm">
+        <p>Add Todo</p>
+        <BadgePlus :size="20" />
+      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger as-child>
+          <Button
+            class="capitalize max-w-24 w-full"
+            variant="outline"
+            size="sm"
+            >{{ currentFilter }}</Button
+          ></DropdownMenuTrigger
         >
-          <p>Clear Todos</p>
-          <RefreshCcw :size="20" />
-        </Button>
-        <DropdownMenu>
-          <DropdownMenuTrigger as-child>
-            <Button
-              class="capitalize max-w-24 w-full"
-              variant="outline"
-              size="sm"
-              >{{ currentFilter }}</Button
-            ></DropdownMenuTrigger
+        <DropdownMenuContent>
+          <DropdownMenuLabel>Filters</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem @click="currentFilter = 'all'"
+            >All</DropdownMenuItem
           >
-          <DropdownMenuContent>
-            <DropdownMenuLabel>Filters</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem @click="currentFilter = 'all'"
-              >All</DropdownMenuItem
-            >
-            <DropdownMenuItem @click="currentFilter = 'completed'"
-              >Completed</DropdownMenuItem
-            >
-            <DropdownMenuItem @click="currentFilter = 'active'"
-              >Active</DropdownMenuItem
-            >
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+          <DropdownMenuItem @click="currentFilter = 'completed'"
+            >Completed</DropdownMenuItem
+          >
+          <DropdownMenuItem @click="currentFilter = 'active'"
+            >Active</DropdownMenuItem
+          >
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
     <Card class="grid gap-2 overflow-y-scroll h-[42rem] no-scrollbar p-1">
       <Card v-for="todo in todoList" class="relative">
@@ -153,5 +142,16 @@ const editTodo = (todo: ITodo) => {
         </CardFooter>
       </Card>
     </Card>
+    <div class="flex justify-center" v-if="todoList.length > 0">
+      <Button
+        @click="clearTodos"
+        size="sm"
+        class="space-x-2 w-full max-w-md"
+        variant="destructive"
+      >
+        <p>Clear Todos</p>
+        <RefreshCcw :size="20" />
+      </Button>
+    </div>
   </div>
 </template>
