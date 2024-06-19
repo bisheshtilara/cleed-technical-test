@@ -19,6 +19,8 @@ export default createStore<IState>({
   plugins: [vuexLocal.plugin],
   getters: {
     allTodos: (state) => state.todos,
+    todoExists: (state) => (todoId: number) =>
+      state.todos.some((todo) => todo.id === todoId),
   },
   mutations: {
     ADD_TODO: (state, todo: Omit<ITodo, "id" | "completed">) => {
@@ -39,7 +41,22 @@ export default createStore<IState>({
     },
     CLEAR_TODOS: (state) => {
       state.todos = []
-      // state.nextTodoId = 1
+      // state.nextTodoId = 1;
+    },
+    EDIT_TODO: (
+      state,
+      {
+        todoId,
+        content,
+      }: { todoId: number; content: Omit<ITodo, "id" | "completed"> }
+    ) => {
+      const todoIndex = state.todos.findIndex((todo) => todo.id === todoId)
+      if (todoIndex !== -1) {
+        state.todos[todoIndex] = {
+          ...state.todos[todoIndex],
+          ...content,
+        }
+      }
     },
   },
   actions: {
@@ -54,6 +71,15 @@ export default createStore<IState>({
     },
     clearTodos: ({ commit }) => {
       commit("CLEAR_TODOS")
+    },
+    editTodo: (
+      { commit },
+      {
+        todoId,
+        content,
+      }: { todoId: number; content: Omit<ITodo, "id" | "completed"> }
+    ) => {
+      commit("EDIT_TODO", { todoId, content })
     },
   },
 })

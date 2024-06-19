@@ -7,6 +7,7 @@ import { CardFooter } from "@/components/ui/card"
 import { CardContent } from "@/components/ui/card"
 import { CardTitle } from "@/components/ui/card"
 import { router } from "@/router"
+import { ITodo } from "@/types/todo"
 import { BadgePlus, CircleCheck, Pencil, Trash2 } from "lucide-vue-next"
 import { computed } from "vue"
 import { useStore } from "vuex"
@@ -18,6 +19,16 @@ const todoList = computed(() => store.state.todos)
 
 const deleteTodo = (id: number) => store.dispatch("deleteTodo", id)
 const markAsCompleted = (id: number) => store.dispatch("toggleTodo", id)
+const editTodo = (todo: ITodo) => {
+  router.push({
+    path: "/add",
+    query: {
+      id: todo.id,
+      title: todo.title,
+      description: todo.description,
+    },
+  })
+}
 </script>
 
 <template>
@@ -44,7 +55,11 @@ const markAsCompleted = (id: number) => store.dispatch("toggleTodo", id)
             <CircleCheck :size="20" />
           </Button>
           <div class="flex gap-x-1.5">
-            <Button size="sm" class="max-w-24 w-full space-x-2">
+            <Button
+              size="sm"
+              class="max-w-24 w-full space-x-2"
+              @click="editTodo(todo)"
+            >
               <p>Edit</p>
               <Pencil :size="16" />
             </Button>
