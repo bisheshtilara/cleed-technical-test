@@ -93,7 +93,15 @@ const editTodo = (todo: ITodo) => {
       </DropdownMenu>
     </div>
     <Card class="grid gap-2 overflow-y-scroll h-[42rem] no-scrollbar p-1">
-      <Card v-for="todo in todoList" class="relative">
+      <div
+        class="flex items-center justify-center"
+        v-if="todoList.length === 0"
+      >
+        <CardDescription>
+          No todos found. Add some todos to get started.
+        </CardDescription>
+      </div>
+      <Card v-else v-for="todo in todoList" class="relative">
         <CircleCheck
           v-if="todo.completed"
           class="absolute top-4 right-4"
