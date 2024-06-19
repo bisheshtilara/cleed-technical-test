@@ -74,7 +74,7 @@ const editTodo = (todo: ITodo) => {
     </div>
     <div
       class="flex items-center justify-between flex-row-reverse"
-      v-if="todoList.length > 0"
+      v-if="todoList.length > 0 || currentFilter !== 'all'"
     >
       <Button @click="router.push('/add')" class="space-x-2" size="sm">
         <p>Add Todo</p>
@@ -109,7 +109,7 @@ const editTodo = (todo: ITodo) => {
     >
       <div
         class="flex flex-col gap-4 items-center justify-center h-full pb-16"
-        v-if="todoList.length === 0"
+        v-if="todoList.length === 0 && currentFilter === 'all'"
       >
         <Button @click="router.push('/add')" class="space-x-2" size="sm">
           <p>Add Todo</p>
@@ -119,7 +119,22 @@ const editTodo = (todo: ITodo) => {
           No todos found. Add some todos to get started.
         </CardDescription>
       </div>
-      <Card v-else v-for="todo in todoList" class="relative h-max">
+      <div
+        v-else-if="todoList.length === 0 && currentFilter !== 'all'"
+        class="flex flex-col gap-4 items-center justify-center h-full pb-16"
+      >
+        <CardDescription>{{
+          currentFilter === "completed"
+            ? "No completed todos found."
+            : "No active todos found."
+        }}</CardDescription>
+      </div>
+      <Card
+        v-else
+        v-for="todo in todoList.sort((a, b) => b.id - a.id)"
+        class="relative h-max"
+        :key="todo.id"
+      >
         <CircleCheck
           v-if="todo.completed"
           class="absolute top-4 right-4"
