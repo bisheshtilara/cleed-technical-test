@@ -29,10 +29,10 @@ onMounted(() => {
   }
 })
 
-const isEdit = ref(!!route.query.id)
+const isEdit = ref<boolean>(!!route.query.id)
 
-const title = ref((route.query.title as string) ?? "")
-const description = ref((route.query.description as string) ?? "")
+const title = ref<string>((route.query.title as string) ?? "")
+const description = ref<string>((route.query.description as string) ?? "")
 
 const addTodo = () => {
   store.dispatch("addTodo", {
