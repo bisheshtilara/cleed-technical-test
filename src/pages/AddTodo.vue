@@ -2,6 +2,6 @@
 
 <template>
   <div>
-    <p>Home</p>
+    <p>Add Todo</p>
   </div>
 </template>
