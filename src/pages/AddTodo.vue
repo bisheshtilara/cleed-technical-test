@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { router } from "@/router"
+import { CircleChevronLeft } from "lucide-vue-next"
 import { onMounted, ref } from "vue"
 import { useRoute } from "vue-router"
 import { useStore } from "vuex"
@@ -57,7 +58,14 @@ const todoAction = () => {
 
 <template>
   <div class="max-w-xl mx-auto">
-    <Card>
+    <Card class="relative">
+      <Button
+        class="absolute top-4 right-4"
+        @click="router.push('/')"
+        variant="ghost"
+      >
+        <CircleChevronLeft />
+      </Button>
       <CardHeader>
         <CardTitle>
           {{ isEdit ? "Edit Todo" : "Add Todo" }}
