@@ -24,7 +24,8 @@ const store = useStore()
 const { toast } = useToast()
 
 onBeforeMount(() => {
-  if (!!store.getters["todoExists"](Number(route.query.id))) {
+  if (!route.query.id) return
+  if (store.getters["todoExists"](Number(route.query.id))) {
     const todoToEdit: ITodo = store.getters["getTodo"](Number(route.query.id))
     title.value = todoToEdit.title
     description.value = todoToEdit.description
