@@ -74,7 +74,10 @@ const editTodo = (todo: ITodo) => {
     <div class="flex items-center justify-between">
       <CardTitle>Todo List</CardTitle>
     </div>
-    <div class="flex items-center justify-between flex-row-reverse">
+    <div
+      class="flex items-center justify-between flex-row-reverse"
+      v-if="todoList.length > 0"
+    >
       <Button @click="router.push('/add')" class="space-x-2" size="sm">
         <p>Add Todo</p>
         <BadgePlus :size="20" />
@@ -103,16 +106,22 @@ const editTodo = (todo: ITodo) => {
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-    <Card class="grid gap-2 overflow-y-scroll h-[42rem] no-scrollbar p-1">
+    <Card
+      class="flex flex-col gap-2 overflow-y-scroll h-[42rem] no-scrollbar p-1"
+    >
       <div
-        class="flex items-center justify-center"
+        class="flex flex-col gap-4 items-center justify-center h-full pb-16"
         v-if="todoList.length === 0"
       >
+        <Button @click="router.push('/add')" class="space-x-2" size="sm">
+          <p>Add Todo</p>
+          <BadgePlus :size="20" />
+        </Button>
         <CardDescription>
           No todos found. Add some todos to get started.
         </CardDescription>
       </div>
-      <Card v-else v-for="todo in todoList" class="relative">
+      <Card v-else v-for="todo in todoList" class="relative h-max">
         <CircleCheck
           v-if="todo.completed"
           class="absolute top-4 right-4"
