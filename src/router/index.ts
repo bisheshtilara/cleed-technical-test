@@ -1,9 +1,13 @@
-import { createMemoryHistory, createRouter } from "vue-router"
-import Home from "@/pages/Home.vue"
+import AddTodo from "@/pages/AddTodo.vue"
+import TodoList from "@/pages/TodoList.vue"
+import { createRouter, createWebHistory } from "vue-router"
 
-const routes = [{ path: "/", component: Home }]
+const routes = [
+  { path: "/", component: TodoList },
+  { path: "/add", component: AddTodo },
+]
 
 export const router = createRouter({
-  history: createMemoryHistory(),
+  history: createWebHistory(),
   routes,
 })
