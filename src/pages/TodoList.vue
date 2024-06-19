@@ -122,7 +122,7 @@ const editTodo = (todo: ITodo) => {
             todo.description
           }}</CardDescription>
         </CardContent>
-        <CardFooter class="flex items-center justify-between">
+        <CardFooter class="flex items-center justify-between gap-x-1.5">
           <Button class="space-x-2" size="sm" @click="markAsCompleted(todo.id)">
             <p>
               {{ todo.completed ? "Mark as Active" : "Mark as Completed" }}
