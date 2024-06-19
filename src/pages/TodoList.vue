@@ -13,6 +13,7 @@ import {
   CircleCheck,
   CircleX,
   Pencil,
+  RefreshCcw,
   Trash2,
 } from "lucide-vue-next"
 import { ComputedRef, computed, ref } from "vue"
@@ -41,8 +42,7 @@ const todoList: ComputedRef<ITodo[]> = computed(() => {
   }
 })
 
-// const todoList = computed(() => store.state.todos)
-// const clearTodos = () => store.dispatch("clearTodos")
+const clearTodos = () => store.dispatch("clearTodos")
 
 const deleteTodo = (id: number) => store.dispatch("deleteTodo", id)
 const markAsCompleted = (id: number) => store.dispatch("toggleTodo", id)
@@ -59,16 +59,15 @@ const editTodo = (todo: ITodo) => {
 </script>
 
 <template>
-  <div className="max-w-xl mx-auto space-y-4">
+  <div class="max-w-xl mx-auto space-y-4">
     <div class="flex items-center justify-between">
       <CardTitle>Todo List</CardTitle>
-      <!-- <Button @click="clearTodos">Clear Todos</Button> -->
+    </div>
+    <div class="flex items-center justify-between flex-row-reverse">
       <Button @click="router.push('/add')" class="space-x-2" size="sm">
         <p>Add Todo</p>
         <BadgePlus :size="20" />
       </Button>
-    </div>
-    <div class="flex justify-end">
       <DropdownMenu>
         <DropdownMenuTrigger as-child>
           <Button
@@ -93,14 +92,23 @@ const editTodo = (todo: ITodo) => {
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-    <div class="grid gap-2">
-      <Card v-for="todo in todoList" class="relative">
+    <Card class="grid gap-2 overflow-y-scroll h-[42rem] no-scrollbar p-1">
+      <div
+        class="flex items-center justify-center"
+        v-if="todoList.length === 0"
+      >
+        <CardDescription>
+          No todos found. Add some todos to get started.
+        </CardDescription>
+      </div>
+      <Card v-else v-for="todo in todoList" class="relative">
         <CircleCheck
           v-if="todo.completed"
           class="absolute top-4 right-4"
           :size="20"
+          color="green"
         />
-        <CircleX v-else class="absolute top-4 right-4" :size="20" />
+        <CircleX v-else class="absolute top-4 right-4" :size="20" color="red" />
         <CardHeader>
           <CardTitle :class="todo.completed && 'line-through'">{{
             todo.title
@@ -111,9 +119,11 @@ const editTodo = (todo: ITodo) => {
             todo.description
           }}</CardDescription>
         </CardContent>
-        <CardFooter class="flex items-center justify-between">
+        <CardFooter class="flex items-center justify-between gap-x-1.5">
           <Button class="space-x-2" size="sm" @click="markAsCompleted(todo.id)">
-            <p>{{ todo.completed ? "Mark as Active" : "Mark as Completed" }}</p>
+            <p>
+              {{ todo.completed ? "Mark as Active" : "Mark as Completed" }}
+            </p>
             <CircleCheck v-if="!todo.completed" :size="20" />
             <CircleX v-else :size="20" />
           </Button>
@@ -122,6 +132,7 @@ const editTodo = (todo: ITodo) => {
               size="sm"
               class="max-w-24 w-full space-x-2"
               @click="editTodo(todo)"
+              variant="outline"
             >
               <p>Edit</p>
               <Pencil :size="16" />
@@ -129,6 +140,7 @@ const editTodo = (todo: ITodo) => {
             <Button
               size="sm"
               class="max-w-28 w-full space-x-2"
+              variant="destructive"
               @click="deleteTodo(todo.id)"
             >
               <p>Delete</p>
@@ -137,6 +149,17 @@ const editTodo = (todo: ITodo) => {
           </div>
         </CardFooter>
       </Card>
+    </Card>
+    <div class="flex justify-center" v-if="todoList.length > 0">
+      <Button
+        @click="clearTodos"
+        size="sm"
+        class="space-x-2 w-full max-w-md"
+        variant="destructive"
+      >
+        <p>Clear Todos</p>
+        <RefreshCcw :size="20" />
+      </Button>
     </div>
   </div>
 </template>
