@@ -8,13 +8,40 @@ import { CardContent } from "@/components/ui/card"
 import { CardTitle } from "@/components/ui/card"
 import { router } from "@/router"
 import { ITodo } from "@/types/todo"
-import { BadgePlus, CircleCheck, Pencil, Trash2 } from "lucide-vue-next"
-import { computed } from "vue"
+import {
+  BadgePlus,
+  CircleCheck,
+  CircleX,
+  Pencil,
+  Trash2,
+} from "lucide-vue-next"
+import { ComputedRef, computed, ref } from "vue"
 import { useStore } from "vuex"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 const store = useStore()
 
-const todoList = computed(() => store.state.todos)
+const currentFilter = ref<"all" | "completed" | "active">("all")
+
+const todoList: ComputedRef<ITodo[]> = computed(() => {
+  switch (currentFilter.value) {
+    case "completed":
+      return store.state.todos.filter((todo: ITodo) => todo.completed)
+    case "active":
+      return store.state.todos.filter((todo: ITodo) => !todo.completed)
+    default:
+      return store.state.todos
+  }
+})
+
+// const todoList = computed(() => store.state.todos)
 // const clearTodos = () => store.dispatch("clearTodos")
 
 const deleteTodo = (id: number) => store.dispatch("deleteTodo", id)
@@ -41,18 +68,54 @@ const editTodo = (todo: ITodo) => {
         <BadgePlus :size="20" />
       </Button>
     </div>
+    <div class="flex justify-end">
+      <DropdownMenu>
+        <DropdownMenuTrigger as-child>
+          <Button
+            class="capitalize max-w-24 w-full"
+            variant="outline"
+            size="sm"
+            >{{ currentFilter }}</Button
+          ></DropdownMenuTrigger
+        >
+        <DropdownMenuContent>
+          <DropdownMenuLabel>Filters</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem @click="currentFilter = 'all'"
+            >All</DropdownMenuItem
+          >
+          <DropdownMenuItem @click="currentFilter = 'completed'"
+            >Completed</DropdownMenuItem
+          >
+          <DropdownMenuItem @click="currentFilter = 'active'"
+            >Active</DropdownMenuItem
+          >
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
     <div class="grid gap-2">
-      <Card v-for="todo in todoList">
+      <Card v-for="todo in todoList" class="relative">
+        <CircleCheck
+          v-if="todo.completed"
+          class="absolute top-4 right-4"
+          :size="20"
+        />
+        <CircleX v-else class="absolute top-4 right-4" :size="20" />
         <CardHeader>
-          <CardTitle>{{ todo.title }}</CardTitle>
+          <CardTitle :class="todo.completed && 'line-through'">{{
+            todo.title
+          }}</CardTitle>
         </CardHeader>
         <CardContent>
-          <CardDescription>{{ todo.description }}</CardDescription>
+          <CardDescription :class="todo.completed && 'line-through'">{{
+            todo.description
+          }}</CardDescription>
         </CardContent>
         <CardFooter class="flex items-center justify-between">
           <Button class="space-x-2" size="sm" @click="markAsCompleted(todo.id)">
-            <p>Mark as Completed</p>
-            <CircleCheck :size="20" />
+            <p>{{ todo.completed ? "Mark as Active" : "Mark as Completed" }}</p>
+            <CircleCheck v-if="!todo.completed" :size="20" />
+            <CircleX v-else :size="20" />
           </Button>
           <div class="flex gap-x-1.5">
             <Button
