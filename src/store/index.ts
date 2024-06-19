@@ -21,7 +21,10 @@ export default createStore<IState>({
     allTodos: (state) => state.todos,
     todoExists: (state) => (todoId: number) =>
       state.todos.some((todo) => todo.id === todoId),
+    getTodo: (state) => (todoId: number) =>
+      state.todos.find((todo) => todo.id === todoId),
   },
+
   mutations: {
     ADD_TODO: (state, todo: Omit<ITodo, "id" | "completed">) => {
       const newTodo: ITodo = {
