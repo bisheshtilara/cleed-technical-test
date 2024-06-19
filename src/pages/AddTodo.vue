@@ -107,6 +107,7 @@ const todoAction = () => {
               placeholder="Buy milk, eggs, and bread."
               class="min-h-32"
               v-model="description"
+              maxlength="200"
             />
           </div>
         </div>
@@ -115,7 +116,7 @@ const todoAction = () => {
         <div class="flex justify-end w-full">
           <Button
             @click="todoAction"
-            disabled="!title"
+            :disabled="!title || title.trim().length === 0"
             class="w-36 space-x-2"
             size="sm"
           >
