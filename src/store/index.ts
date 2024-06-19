@@ -37,6 +37,10 @@ export default createStore<IState>({
     DELETE_TODO: (state, todoId: number) => {
       state.todos = state.todos.filter((todo) => todo.id !== todoId)
     },
+    CLEAR_TODOS: (state) => {
+      state.todos = []
+      // state.nextTodoId = 1
+    },
   },
   actions: {
     addTodo: ({ commit }, todo: Omit<ITodo, "id" | "completed">) => {
@@ -47,6 +51,9 @@ export default createStore<IState>({
     },
     deleteTodo: ({ commit }, todoId: number) => {
       commit("DELETE_TODO", todoId)
+    },
+    clearTodos: ({ commit }) => {
+      commit("CLEAR_TODOS")
     },
   },
 })
