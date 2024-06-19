@@ -26,8 +26,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useToast } from "@/components/ui/toast"
 
 const store = useStore()
+const { toast } = useToast()
 
 const currentFilter = ref<"all" | "completed" | "active">("all")
 
@@ -42,10 +44,19 @@ const todoList: ComputedRef<ITodo[]> = computed(() => {
   }
 })
 
-const clearTodos = () => store.dispatch("clearTodos")
+const clearTodos = () => {
+  store.dispatch("clearTodos")
+  toast({ description: "Todos cleared successfully" })
+}
 
-const deleteTodo = (id: number) => store.dispatch("deleteTodo", id)
-const markAsCompleted = (id: number) => store.dispatch("toggleTodo", id)
+const deleteTodo = (id: number) => {
+  store.dispatch("deleteTodo", id)
+  toast({ description: "Todo deleted successfully" })
+}
+const markAsCompleted = (id: number) => {
+  store.dispatch("toggleTodo", id)
+  toast({ description: "Todo updated successfully" })
+}
 const editTodo = (todo: ITodo) => {
   router.push({
     path: "/add",
