@@ -1,16 +1,22 @@
 import { type ITodo } from "@/types/todo"
 import { createStore } from "vuex"
+import VuexPersistence from "vuex-persist"
 
 interface IState {
   todos: ITodo[]
   nextTodoId: number
 }
 
+const vuexLocal = new VuexPersistence<IState>({
+  storage: window.localStorage,
+})
+
 export default createStore<IState>({
   state: {
     todos: [],
     nextTodoId: 1,
   },
+  plugins: [vuexLocal.plugin],
   getters: {
     allTodos: (state) => state.todos,
   },
