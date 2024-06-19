@@ -11,30 +11,36 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { useToast } from "@/components/ui/toast/use-toast"
 import { router } from "@/router"
+import { ITodo } from "@/types/todo"
 import { BadgePlus, CircleChevronLeft, Pencil } from "lucide-vue-next"
-import { onMounted, ref } from "vue"
+import { onBeforeMount, ref } from "vue"
 import { useRoute } from "vue-router"
 import { useStore } from "vuex"
-import { useToast } from "@/components/ui/toast/use-toast"
 
 const route = useRoute()
 const store = useStore()
 const { toast } = useToast()
 
-onMounted(() => {
-  if (!store.getters["todoExists"](Number(route.query.id))) {
-    title.value = ""
-    description.value = ""
-    isEdit.value = false
-    router.push("/add")
+onBeforeMount(() => {
+  if (!!store.getters["todoExists"](Number(route.query.id))) {
+    const todoToEdit: ITodo = store.getters["getTodo"](Number(route.query.id))
+    title.value = todoToEdit.title
+    description.value = todoToEdit.description
+    return
   }
+  toast({
+    title: "Todo not found",
+    description: "The todo you are trying to edit does not exist.",
+  })
+  router.push("/")
 })
 
 const isEdit = ref<boolean>(!!route.query.id)
 
-const title = ref<string>((route.query.title as string) ?? "")
-const description = ref<string>((route.query.description as string) ?? "")
+const title = ref<string>("")
+const description = ref<string | undefined>("")
 
 const addTodo = () => {
   store.dispatch("addTodo", {

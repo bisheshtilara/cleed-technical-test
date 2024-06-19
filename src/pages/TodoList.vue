@@ -62,8 +62,6 @@ const editTodo = (todo: ITodo) => {
     path: "/add",
     query: {
       id: todo.id,
-      title: todo.title,
-      description: todo.description,
     },
   })
 }
