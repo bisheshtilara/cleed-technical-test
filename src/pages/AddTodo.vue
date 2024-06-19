@@ -46,7 +46,7 @@ const description = ref<string | undefined>("")
 const addTodo = () => {
   store.dispatch("addTodo", {
     title: title.value,
-    description: description.value,
+    description: description.value?.trim(),
   })
 }
 
